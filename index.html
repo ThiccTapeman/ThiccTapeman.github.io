@@ -1,11 +1,271 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="/css/styles.css">
-    </head>
-    <body>
-        <h1>Hello World</h1>
-        <p>I'm hosted with GitHub Pages.</p>
-        <p>IT WORKED IF I SEE THIS</p>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href=".styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="center-box">
+        <h1>Klicka på indirekta och direkta object</h1>
+        <div id="mark-words"></div>
+        <div class="buttons">
+            <div class="btn prev" id="prev">&lt;</div>
+            <div class="btn next" id="next">Next</div>
+        </div>
+    </div>
+    <script>
+        const e = document.getElementById("mark-words");
+        const next = document.getElementById("next");
+        const prev = document.getElementById("prev");
+        let words;
+        let selamt = 0;
+
+        let score = 0;
+
+        let prevans = [];
+
+        const levels = [
+            {
+                id: 1,
+                mening: "Gustav var ute och plockade blommor till sin mammas-födelsedag.",
+                object: 5,
+                indirekt: 8
+            },
+            {
+                id: 2,
+                mening: "Min lillebror gav mig en kram när han kom hem.",
+                object: 3,
+                indirekt: 5
+            },
+            {
+                id: 3,
+                mening: "Markus lärare skulle vilja ge honom beröm på den senaste uppsatsen.",
+                object: 6,
+                indirekt: 5
+            },
+            {
+                id: 4,
+                mening: "Din bästa-vän kom till sjukhuset bara för att se dig.",
+                object: 4,
+                indirekt: 1
+            },
+            {
+                id: 5,
+                mening: "Min grannes-hund letade fram min borttappade-plånbok åt mig.",
+                object: 5,
+                indirekt: 1
+            },
+            {
+                id: 6,
+                mening: "Den lilla-flickan snubblade och fick-ett-skrapsår.",
+                object: 4,
+                indirekt: 1
+            },
+            {
+                id: 7,
+                mening: "Skolans rektor-anordnade en temadag till oss elever.",
+                object: 4,
+                indirekt: 7
+            },
+            {
+                id: 8,
+                mening: "Filippa gick till omklädningsrummet för att byta-om till idrotten.",
+                object: 3,
+                indirekt: 0
+            },
+            {
+                id: 9,
+                mening: "Bob ger en blomma.",
+                object: 3,
+                indirekt: 0
+            },
+            {
+                id: 10,
+                mening: "Pelle ger en blomma till Leo.",
+                object: 3,
+                indirekt: 0
+            },
+            {
+                id: 11,
+                mening: "Molly önskade sig en katt till jul.",
+                object: 4,
+                indirekt: 0
+                //jidwahidwahwda
+            },
+            {
+                id: 12,
+                mening: "På Kalles födelsedag fick han en ny mobil av sin brorsa.",
+                object: 1,
+                indirekt: 7
+            },
+            {
+                id: 13,
+                mening: "Jag var-ute och köpte julklappar till-familjen.",
+                object: 4,
+                indirekt: 5
+            },
+            {
+                id: 14,
+                mening: "Bellas-klass samlade in pengar till studenten.",
+                object: 0,
+                indirekt: 5
+            },
+            {
+                id: 15,
+                mening: "Min systers-bästis bjöd in oss till hennes födelsedagsfest.",
+                object: 7,
+                indirekt: 4
+            },
+            {
+                id: 16,
+                mening: "Jag och min mamma var ute och plockade-svamp till middagen ikväll.",
+                object: 3,
+                indirekt: 9
+            },
+            {
+                id: 17,
+                mening: "Nellys-rumskompis fick en inbjudan till en fest.",
+                object: 3,
+                indirekt: 0
+            },
+            {
+                id: 18,
+                mening: "Jag håller på att förbereda-maten åt familjen.",
+                object: 4,
+                indirekt: 6
+            },
+            {
+                id: 19,
+                mening: "Harry tvingade mig att följa-med till cirkusen.",
+                object: 2,
+                indirekt: 4
+            },
+            {
+                id: 20,
+                mening: "Basse fick uppdraget att spionera.",
+                object: 0,
+                indirekt: 4
+            },
+            {
+                id: 21,
+                mening: "För Lisa betydde Bobo allt",
+                object: 4,
+                indirekt: 3
+            },
+            {
+                id: 22,
+                mening: "Vår historia lärare gav oss en uppgift att skriva en uppsats.",
+                object: 6,
+                indirekt: 4
+            },
+            {
+                id: 23,
+                mening: "Jessie bakade en tårta åt hennes-syster.",
+                object: 3,
+                indirekt: 5
+            },
+            {
+                id: 24,
+                mening: "Jag var tvungen att fixa mammas dator åt henne.",
+                object: 0,
+                indirekt: 8
+            }
+        ]
+
+        function loadlevel(id) {
+            let lvl = levels[id].id;
+            let mening = levels[id].mening;
+            let object = levels[id].object;
+            let indirekt = levels[id].indirekt;
+
+            words = mening.split(" ");
+
+            e.innerText = "";
+            e.innerHTML = "";
+
+            let text = "";
+            for(let i = 0; i < words.length; i++) {
+                let sides = words[i].split("-");
+                if(sides.length > 1) {
+                    text = text + "<span class='mark-word' id="+i+">";
+                    for(let j = 0; j < sides.length; j++) {
+                        text = text + sides[j] + "&nbsp";
+                    }
+                    text = text  + "</span>";
+                } else {
+                    text = text + "<span class='mark-word' id="+i+">" + words[i] + "</span>" + "&nbsp";
+                }
+            }
+            e.innerHTML = text;
+
+            for(let i = 0; i < words.length; i++) {
+                let _e = document.getElementById(i);
+                _e.addEventListener("click", function() {
+                    let cor = false;
+                    if(i == indirekt || i == object) {
+                        cor = true;
+                    } else {
+                        
+                    }
+                    _e.classList.toggle("sel");
+                    if(_e.classList.contains("sel")) {
+                        selamt++;
+                    } else {
+                        selamt--;
+                    }
+                    if(cor) {
+                        if(_e.classList.contains("sel")) {
+                        score++;
+                    } else {
+                        score--;
+                    }
+                    }
+                });
+            }
+        }
+
+        function loadFinish() {
+            text = "<span class='mark-word'>Du fick "+score+"/48 det blir ett: ";
+            if(score < 16) text = text + "F</span>";
+            else if(score >= 16 && score <= 21) text = text + "E</span>";
+            else if(score >= 22 && score <= 27) text = text + "D</span>";
+            else if(score >= 28 && score <= 35) text = text + "C</span>";
+            else if(score >= 36 && score <= 41) text = text + "B</span>";
+            else if(score >= 42 && score <= 48) text = text + "A</span>";
+            else if(score > 48 ) text = text + "- eftersom du fuskade</span>";
+            e.innerHTML = text;
+        }
+
+        let level = 0;
+        prev.addEventListener("click", function() {
+            level--;
+            if(level < levels.length && level >= 0) {
+                loadlevel(level);
+            } else {
+                level++;
+                loadlevel(level);
+            }
+        });
+        next.addEventListener("click", function() {
+            if(selamt > 0) {
+                level++;
+                if(level == levels.length) {
+                    loadFinish();
+                } else if(level < levels.length && level >= 0) {
+                    loadlevel(level);
+                } else {
+                    level--;
+                    loadlevel(level);
+                }
+                console.log(score);
+            }
+        })
+        
+        loadlevel(level);
+
+    </script>
+</body>
 </html>
